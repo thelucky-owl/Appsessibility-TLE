@@ -18,7 +18,7 @@ const categories = [
                 name: "Kan je alle informatie vinden op de website?",
                 standardAnswer: "",
                 answer: "",
-                recordedAnwser:[],
+                recordedAnswer:[],
                 status: 0,
             },
             {

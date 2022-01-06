@@ -22,6 +22,7 @@ export const RecordedAnswers = ({ navigation, route }) => {
     }
 
     const recordingsStored = pickedQuestion.recordedAnswer 
+
     const getRecordingLines = recordingsStored.map((recordingLine,i)=>{
             return(
                 <View key={i}>
@@ -47,8 +48,8 @@ export const RecordedAnswers = ({ navigation, route }) => {
             <Text style={globalStyles.title}>Opnames voor de vraag: {pickedQuestion.name}</Text>
             {checkRecordings()}
             <ScrollView>
-                {getRecordingLines}
-            </ScrollView>
+                    {getRecordingLines}
+                </ScrollView>
             <TouchableOpacity
                     style={globalStyles.button}
                     onPress={ () => {

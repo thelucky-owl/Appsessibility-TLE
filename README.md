@@ -8,7 +8,7 @@ Although built for a client, this is, at its core, a school project built by fiv
 ## How to use?
 1. Run `npm install --global expo-cli` to install the Expo command line interface.
 2. Install all dependecies `npm install` used in the project.
-3. Change the second import statement to `import App from '../../App/App` in `node_modules\expo\AppEntry.js`
+3. Change the second import statement to `import App from '../../App/App'` in `node_modules\expo\AppEntry.js`
 5. Run `expo start` to try it out.
 
 > You can run the app in a simulator, but if you want to try it out on your own device, install Expo GO on your device. 

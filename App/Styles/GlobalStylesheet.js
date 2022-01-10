@@ -130,5 +130,16 @@ export const globalStyles = StyleSheet.create({
         fontSize: 20,
         marginTop: 40,
         textAlign: 'center',
-    }
+    }, 
+    logOutButton: {
+        marginVertical: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+        alignItems: 'center',
+        backgroundColor: '#8B0000',
+    },
+    logOutButtonText: {
+        color: '#FFFFFF',
+        fontSize: 20
+    },
 })

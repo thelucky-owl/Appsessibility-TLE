@@ -44,14 +44,14 @@ export const HomeScreen = ({ navigation }) => {
     return(
         <View style={globalStyles.standardView}>
             <Text style={globalStyles.title}>Welkom bij de vragenlijst over de locatie: { locationName }.</Text>
-            <TouchableOpacity
-                onPress={handleSignOut}
-                style={globalStyles.button}>
-                <Text style={globalStyles.buttonText}>Sign out</Text>
-            </TouchableOpacity>
             <ScrollView>
                 {catergoryButtons}
             </ScrollView>
+            <TouchableOpacity
+                onPress={handleSignOut}
+                style={globalStyles.logOutButton}>
+                <Text style={globalStyles.logOutButtonText}>Sign out</Text>
+            </TouchableOpacity>
         </View>
     );
 };

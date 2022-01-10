@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { globalStyles } from '../Styles/GlobalStylesheet';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { globalStyles } from "../Styles/GlobalStylesheet";
+import { db } from "../../firebase";
+import { collection, getDocs , doc, setDoc, addDoc } from "firebase/firestore";
 
 export const ExpandedAnswerScreen = ({ navigation, route }) => {
     const { categoryID, questionID } = route.params;
@@ -30,6 +32,17 @@ export const ExpandedAnswerScreen = ({ navigation, route }) => {
         pickedQuestion.answer = answer;
     }
 
+    const handleNew = async (answer) => {
+        const setFullAnswer = (answer) => {
+            pickedQuestion.answer = answer;
+        }   
+        const question = `${pickedQuestion.name}`
+        const value = (question)
+        const collectionRef = collection(db,"vragen");
+        const payload = {answer, value};
+        await addDoc(collectionRef, payload);
+    }
+
     // Change header title to right category name
     useEffect(() => {
         navigation.setOptions({ 'title': `${pickedQuestion.name}` })
@@ -48,8 +61,9 @@ export const ExpandedAnswerScreen = ({ navigation, route }) => {
             <TouchableOpacity
                     style={globalStyles.button}
                     onPress={ () => {
+                        handleNew(answer, pickedQuestion.name)
                         changeStatus(2);
-                        setFullAnswer(answer)
+                        setFullAnswer(answer);
                         navigation.navigate('Category', {
                             categoryID: pickedCategory.id
                         })

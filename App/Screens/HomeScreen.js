@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { globalStyles } from '../Styles/GlobalStylesheet';
+import { auth } from '../../firebase';
 
 export const HomeScreen = ({ navigation }) => {
     let locationName;
@@ -8,6 +9,15 @@ export const HomeScreen = ({ navigation }) => {
 
     locationName = "Gemeentehuis Rotterdam";
     categories = require('../Includes/QuestionsPerCategory');
+
+    const handleSignOut = () => {
+        auth
+        .signOut()
+        .then(() => {
+            navigation.replace("Login")
+        })
+        .catch(error => alert(error.message))
+    }
 
     // Change header title to right location name
     useEffect(() => {
@@ -33,7 +43,12 @@ export const HomeScreen = ({ navigation }) => {
 
     return(
         <View style={globalStyles.standardView}>
-                <Text style={globalStyles.title}>Welkom bij de vragenlijst over de locatie: { locationName }.</Text>
+            <Text style={globalStyles.title}>Welkom bij de vragenlijst over de locatie: { locationName }.</Text>
+            <TouchableOpacity
+                onPress={handleSignOut}
+                style={globalStyles.button}>
+                <Text style={globalStyles.buttonText}>Sign out</Text>
+            </TouchableOpacity>
             <ScrollView>
                 {catergoryButtons}
             </ScrollView>

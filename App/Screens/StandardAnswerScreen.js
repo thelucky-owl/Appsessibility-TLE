@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import { globalStyles } from '../Styles/GlobalStylesheet';
+import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { globalStyles } from "../Styles/GlobalStylesheet";
+import { db } from "../../firebase";
+import { collection, getDocs , doc, setDoc, addDoc } from "firebase/firestore";
 
 export const StandardAnswerScreen = ({ navigation, route }) => {
     const { categoryID, questionID } = route.params;
@@ -32,10 +34,21 @@ export const StandardAnswerScreen = ({ navigation, route }) => {
         pickedQuestion.standardAnswer = answer;
     }
 
-        // Change header title to right category name
-        useEffect(() => {
-            navigation.setOptions({ 'title': `${pickedQuestion.name}` })
-        }, [pickedCategory])
+    const handleNew = async (answer) => {
+        const setStandardAnswer = (answer) => {
+            pickedQuestion.standardAnswer = answer;
+        }
+        const question = `${pickedQuestion.name}`
+        const value = (question)
+        const collectionRef = collection(db,"vragenkort");
+        const payload = {answer, value};
+        await addDoc(collectionRef, payload);
+    }
+
+    // Change header title to right category name
+    useEffect(() => {
+        navigation.setOptions({ 'title': `${pickedQuestion.name}` })
+    }, [pickedCategory])
 
     const standardAnswersButtons = standardAnswers.map((item) => {
         return(
@@ -43,6 +56,7 @@ export const StandardAnswerScreen = ({ navigation, route }) => {
                 <TouchableOpacity
                     style={globalStyles.questionButton}
                     onPress={ () => {
+                        handleNew(item, pickedQuestion)
                         changeStatus(1);
                         setStandardAnswer(item)
                         navigation.navigate('Category', {

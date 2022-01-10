@@ -1,44 +1,66 @@
-import React, {useState} from 'react';
-import { View, Text, TouchableWithoutFeedback, TouchableOpacity, TextInput, Keyboard } from 'react-native';
-import { globalStyles } from '../Styles/GlobalStylesheet';
+import { useNavigation } from "@react-navigation/core";
+import { useEffect, useState } from "react";
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { auth } from "../../firebase";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { LoginStylesheet } from "../Styles/LoginStylesheet";
 
-export const LoginScreen = ({ navigation }) => {
+export const LoginScreen = () => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
-    const [tempCode, setTempCode] = React.useState("");
-    const [errorMessage, setErrorMessage] = React.useState("");
+    const navigation = useNavigation()
 
-    return(
-        <View style={globalStyles.standardView}>
-            <View>
-                <Text style={globalStyles.title}>Welkom op de loginpagina!</Text>
-                <Text style={globalStyles.subTitle}>Vul hieronder uw eenmalige code in.</Text>
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                navigation.replace("Home")
+            }
+        })
+        return unsubscribe
+    }, [])
+
+    return (
+        <KeyboardAvoidingView style={LoginStylesheet.container} behavior="padding">
+            <View style={LoginStylesheet.inputContainer}>
+                <TextInput
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={text => setEmail(text)}
+                    style={LoginStylesheet.input}/>
+                <TextInput
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    style={LoginStylesheet.input}
+                    secureTextEntry/>
             </View>
-            <View>
-                <TextInput 
-                    style={[globalStyles.standardInput, globalStyles.centeredTextInput]}
-                    onChangeText={setTempCode}
-                    value={tempCode}
-                    keyboardType='numeric'
-                />
+            <View style={LoginStylesheet.buttonContainer}>
                 <TouchableOpacity
-                    style={globalStyles.button}
-                    onPress={ () => {
-                        if (!tempCode.trim()) {
-                            setErrorMessage('Er lijkt geen code te zijn ingevuld.');
-                        } else if (tempCode.length < 6) {
-                            setErrorMessage('De code is minimaal 6 cijfers lang.');
-                        } else if (tempCode.length > 6) {
-                            setErrorMessage('De code is maximaal 6 cijfers lang.');
-                        } else {
-                            navigation.navigate('Home', {
-                                tempCode: tempCode,
-                            });
-                        };
+                    onPress={() => {
+                        signInWithEmailAndPassword(auth, email, password)
+                        .then(userCredentials => {
+                            const user = userCredentials.user;
+                            console.log('Logged in with:', user.email);
+                        })
+                        .catch(error => alert(error.message))
                     }}
-                >
-                    <Text style={globalStyles.buttonText}>Ga door naar de vragenlijst</Text>
-                </TouchableOpacity> 
+                    style={LoginStylesheet.button}>
+                    <Text style={LoginStylesheet.buttonText}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        createUserWithEmailAndPassword(auth, email, password)
+                        .then(userCredentials => {
+                            const user = userCredentials.user;
+                            console.log('Registered with:', user.email);
+                        })
+                        .catch(error => alert(error.message))
+                    }}
+                    style={[LoginStylesheet.button, LoginStylesheet.buttonOutline]}>
+                    <Text style={LoginStylesheet.buttonOutlineText}>Register</Text>
+                </TouchableOpacity>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
-};
+}

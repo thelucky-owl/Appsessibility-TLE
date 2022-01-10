@@ -161,7 +161,9 @@ export const CategoryScreen = ({ navigation, route }) => {
                             style={[globalStyles.modalButton, globalStyles.button]}
                             onPress={()=>{
                                 setModalVisibility2(false)
-                                navigation.navigate('Home', { 
+                                //going back to Home causes an error that makes the modal reappear and causes the app to freeze
+                                //can go back to login because the user is still login and thus gets send back to the categories screen
+                                navigation.navigate('Login', { 
                             });}}>
                             <Text style={globalStyles.buttonText}>Terug naar alle categorieën</Text>
                         </TouchableOpacity>
